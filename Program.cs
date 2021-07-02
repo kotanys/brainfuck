@@ -42,7 +42,9 @@ namespace SharpBrainfuck
         static string WorkOnArgs(string[] args, out string logFile, out bool ignoreChecks)
         {
             bool makingLogPath = false;
+            bool workingOnArguments = false;
             ignoreChecks = false;
+            logFile = null;
             
             StringBuilder sb = new StringBuilder();
             StringBuilder logSb = new StringBuilder();
@@ -56,19 +58,21 @@ namespace SharpBrainfuck
                 else if (word == "-l")
                 {
                     makingLogPath = true;
+                    workingOnArguments = true;
                 }
                 else if (word == "-i")
                 {
                     ignoreChecks = true;
+                    workingOnArguments = true;
                 }
-                else
+                else if (!workingOnArguments)
                 {
                     sb.Append(word);
                     sb.Append(' ');
                 }
             }
 
-            logFile = (logSb.Length > 0) ? logSb.ToString() : "log.txt";
+            if (makingLogPath) logFile = (logSb.Length > 0) ? logSb.ToString() : "log.txt";
             return sb.ToString();
         }
     }
