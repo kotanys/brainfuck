@@ -5,16 +5,20 @@ Yep, that is another bf interpreter. There are millions of them, but now there i
 Brainfuck wikipedia page: https://ru.wikipedia.org/wiki/Brainfuck<br>
 
 Usage:
-  <ol>
-  <li>Download and install git</li>
-  <li>Run "git clone https://github.com/kotanys/brainfuck/"</li>
-  <li>Compile code with any C# compiler (e.g. OmniSharp)</li>
-  <li>Run "SharpBrainfuck.exe {path to file with brainfuck code} [-l [path]]"</li>
-      <ul><li>Arguments</li>
+<ol>
+    <li>Download and install git</li>
+    <li>Run "git clone https://github.com/kotanys/brainfuck/"</li>
+    <li>Compile code with any C# compiler (e.g. OmniSharp)</li>
+    <li>Run "SharpBrainfuck.exe {path to file with brainfuck code} [-i] [-l [path]]"</li>
+    <ul>
+        <li>Arguments</li>
         <ul>
-          <li>-l [path] - Create a log if program crashes. Unless "path" is specified, log.txt will be used as a log file.
+          <li>-i - ignore code check</li>
+          <li>-l [path] - Create a log if program crashes. Unless "path" is specified, log.txt will be used as a log file.</li>
         </ul> 
-      </ul>
-  </ol>
+        <li>Note that path must be written as-is, without any additional symbols (like ")</li>
+    </ul>
+</ol>
   
-P.S I know my code sucks
+P.S. I know my code sucks
+P.P.S. So does my English
