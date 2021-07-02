@@ -9,16 +9,19 @@ namespace SharpBrainfuck
         private string _code;
         public string Code { get => _code; private set => _code = value; } // use SetCode() method to set code
 
-        public Interpreter(string code)
+        public Interpreter(string code, bool ignoreChecks)
         {
-            SetCode(code);
+            if (!ignoreChecks)
+                SetCode(code);
+            else 
+                Code = code;
         }
 
         public void SetCode(string newCode)
         {
             if (newCode == null)
             {
-                throw new ArgumentNullException(nameof(newCode) + "is null.");
+                throw new ArgumentNullException(nameof(newCode));
             }
 
             uint openLoopSign = 0;

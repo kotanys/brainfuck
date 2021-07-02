@@ -10,13 +10,14 @@ namespace SharpBrainfuck
         {
             if (args.Length == 0)
             {
-                Console.WriteLine("Usage: brainfuck.exe {path to .bf} [-l [path]]");
+                Console.WriteLine("Usage: brainfuck.exe {path to .bf} [-i] [-l [path]]");
                 Console.WriteLine("Arguments:");
+                Console.WriteLine("\t-i - ignore code check");
                 Console.WriteLine("\t-l - path to the file where the log will be written if something goes wrong. If path is not specified, log.txt will be used.");
                 return;
             }
             
-            string path = MakePath(args, out string logFile);
+            string path = WorkOnArgs(args, out string logFile, out bool ignoreChecks);
             string code;
 
             try
@@ -32,17 +33,20 @@ namespace SharpBrainfuck
                 return;
             }
 
-            Interpreter interpreter = new Interpreter(code);
+            Interpreter interpreter = new Interpreter(code, ignoreChecks);
             interpreter.Run(outputToConsole: true, logFile);
         }
 
-        static string MakePath(string[] wordsArray, out string logFile)
+        // argument parsing should be reworked
+        // this is shit
+        static string WorkOnArgs(string[] args, out string logFile, out bool ignoreChecks)
         {
             bool makingLogPath = false;
+            ignoreChecks = false;
             
             StringBuilder sb = new StringBuilder();
             StringBuilder logSb = new StringBuilder();
-            foreach (string word in wordsArray)
+            foreach (string word in args)
             {
                 if (makingLogPath) 
                 {
@@ -51,9 +55,12 @@ namespace SharpBrainfuck
                 }
                 else if (word == "-l")
                 {
-                    
                     makingLogPath = true;
-                } 
+                }
+                else if (word == "-i")
+                {
+                    ignoreChecks = true;
+                }
                 else
                 {
                     sb.Append(word);
