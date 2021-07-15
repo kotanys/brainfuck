@@ -1,15 +1,20 @@
 namespace SharpBrainfuck
 {
-    public class LoggerInfo
+    public struct LoggerInfo
     {
-        public int instructionIndex;
-        public byte[] memoryDump;
-        public bool crashed;
+        private int _instructionIndex;
+        private byte[] _memoryDump;
+        private bool _crashed;
+
+        public int InstructionIndex { get => _instructionIndex; }
+        public byte[] MemoryDump { get => _memoryDump; }
+        public bool Crashed { get => _crashed; }
+
         public LoggerInfo(int instructionIndex, byte[] memory, bool crashed)
         {
-            this.instructionIndex = instructionIndex;
-            this.memoryDump = memory;
-            this.crashed = crashed;
+            _instructionIndex = instructionIndex;
+            _memoryDump = memory;
+            _crashed = crashed;
         }
     }
 }

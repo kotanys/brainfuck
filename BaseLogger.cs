@@ -9,22 +9,20 @@ namespace SharpBrainfuck
 
         public void Log(LoggerInfo loggerInfo)
         {
-            if (loggerInfo == null) 
-                throw new NullReferenceException(nameof(loggerInfo));
             if (LogFile == null)
                 throw new NullReferenceException(nameof(LogFile));
             
             using (StreamWriter sw = new StreamWriter(LogFile))
             {
-                sw.WriteLine((loggerInfo.crashed) ? "CRASH" : "Execution completed");
+                sw.WriteLine((loggerInfo.Crashed) ? "CRASH" : "Execution completed");
                 sw.WriteLine(DateTime.Now);
-                sw.WriteLine("I was at instruction {0} (including comments)", loggerInfo.instructionIndex);
+                sw.WriteLine("I was at instruction {0} (including comments)", loggerInfo.InstructionIndex);
                 sw.WriteLine("\nMemory:\n");
 
-                for (int j = 0; j < loggerInfo.memoryDump.Length; j++)
+                for (int j = 0; j < loggerInfo.MemoryDump.Length; j++)
                 {
-                    if (loggerInfo.memoryDump[j] != 0)
-                        sw.WriteLine("[{0}]\t==\t{1}", j, loggerInfo.memoryDump[j]);
+                    if (loggerInfo.MemoryDump[j] != 0)
+                        sw.WriteLine("[{0}]\t==\t{1}", j, loggerInfo.MemoryDump[j]);
                 }
             }
         }
