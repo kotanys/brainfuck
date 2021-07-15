@@ -4,21 +4,33 @@ using System.Text;
 
 namespace SharpBrainfuck
 {
-    class Interpreter : Logger
+    public class Interpreter
     {
+        #region Properties
         private string _code;
         public string Code { get => _code; private set => _code = value; } // use SetCode() method to set code
 
+        public int CellsCount { get; set; } = 30000;
+        public ILogger Logger { get; set; } = new BaseLogger();
+        #endregion
+        
+        #region Constructors
+        public Interpreter() { }
         public Interpreter(string code, bool ignoreChecks)
         {
-            if (!ignoreChecks)
-                SetCode(code);
-            else 
-                Code = code;
+            SetCode(code, ignoreChecks);
         }
+        #endregion
 
-        public void SetCode(string newCode)
+        #region Methods
+        public void SetCode(string newCode, bool ignoreChecks = false)
         {
+            if (ignoreChecks)
+            {
+                Code = newCode;
+                return;
+            }
+            
             if (newCode == null)
             {
                 throw new ArgumentNullException(nameof(newCode));
@@ -47,9 +59,12 @@ namespace SharpBrainfuck
             Code = newCode;
         }
 
-        public string Run(bool outputToConsole, string logFile)
+        public string Run(bool outputToConsole, out LoggerInfo loggerOutput)
         {
-            byte[] memory = new byte[30000];
+            if (_code == null)
+                throw new BrainfuckException("No code set!");
+
+            byte[] memory = new byte[CellsCount];
             int pointer = 0;
             List<int> loops = new List<int>();
 
@@ -123,14 +138,22 @@ namespace SharpBrainfuck
                         }
                     }
                 }
-                Console.WriteLine();
+                
+                loggerOutput = new(i, memory, false);
                 return output.ToString();
-            } 
+            }
             catch (Exception)
             {
-                Log(logFile, memory, i);
-                throw new BrainfuckException();
+                loggerOutput = new(i, memory, true);
+                Logger.Log(loggerOutput);
+                throw new BrainfuckException("Something went wrong!");
             }
         }
+
+        public string Run(bool outputToConsole)
+        {
+            return Run(outputToConsole, out LoggerInfo _);
+        }
+        #endregion
     }
 }

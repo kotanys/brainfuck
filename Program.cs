@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SharpBrainfuck
 {
-    class Program
+    internal static class Program
     {
         static void Main(string[] args)
         {
@@ -17,7 +17,8 @@ namespace SharpBrainfuck
                 return;
             }
             
-            string path = WorkOnArgs(args, out string logFile, out bool ignoreChecks);
+            Interpreter interpreter = new();
+            string path = WorkOnArgs(args, ref interpreter, out bool ignoreChecks);
             string code;
 
             try
@@ -33,18 +34,19 @@ namespace SharpBrainfuck
                 return;
             }
 
-            Interpreter interpreter = new Interpreter(code, ignoreChecks);
-            interpreter.Run(outputToConsole: true, logFile);
+            interpreter.SetCode(code, ignoreChecks);
+            interpreter.Run(true);
+
+            Console.WriteLine();
         }
 
         // argument parsing should be reworked
         // this is shit
-        static string WorkOnArgs(string[] args, out string logFile, out bool ignoreChecks)
+        static string WorkOnArgs(string[] args, ref Interpreter interpreter, out bool ignoreChecks)
         {
             bool makingLogPath = false;
             bool workingOnArguments = false;
             ignoreChecks = false;
-            logFile = null;
             
             StringBuilder sb = new StringBuilder();
             StringBuilder logSb = new StringBuilder();
@@ -72,7 +74,7 @@ namespace SharpBrainfuck
                 }
             }
 
-            if (makingLogPath) logFile = (logSb.Length > 0) ? logSb.ToString() : "log.txt";
+            if (makingLogPath) interpreter.Logger.LogFile = (logSb.Length > 0) ? logSb.ToString() : interpreter.Logger.LogFile;
             return sb.ToString();
         }
     }

@@ -19,6 +19,8 @@ Usage:
         <li>Note that path must be written as-is, without any additional symbols (like ")</li>
     </ul>
 </ol>
+
+By the way, you can compile it as .dll and use it in your programs. Just set "OutputType" in SharpBrainfuck.csproj to "library".
   
-P.S. I know my code sucks
+P.S. I know my code sucks<br>
 P.P.S. So does my English
