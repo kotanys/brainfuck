@@ -2,7 +2,7 @@
 Yet another Brainfuck interpreter. Written in C#
 
 Yep, that is another bf interpreter. There are millions of them, but now there is mine too.<br>
-Brainfuck wikipedia page: https://ru.wikipedia.org/wiki/Brainfuck<br>
+Brainfuck wikipedia page: https://wikipedia.org/wiki/Brainfuck<br>
 
 Usage:
 <ol>
