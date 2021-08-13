@@ -1,8 +1,13 @@
 namespace SharpBrainfuck
 {
+    /// <summary>
+    /// Interface for brainfuck loggers.
+    /// </summary>
     public interface ILogger
     {
-        string LogFile { get; set; }
-        void Log (LoggerInfo loggerInfo);
+        /// <summary>
+        /// This method will be called if brainfuck program crashes.
+        /// </summary>
+        void Log(LoggerInfo loggerInfo);
     }
 }

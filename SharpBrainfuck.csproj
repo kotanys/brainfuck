@@ -6,4 +6,10 @@
     <AssemblyVersion>2.0.1.0</AssemblyVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\Пользователь\source\repos\brainfuck\Documentation\SharpBrainfuck.xml</DocumentationFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+
 </Project>

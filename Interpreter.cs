@@ -4,18 +4,40 @@ using System.Text;
 
 namespace SharpBrainfuck
 {
+    /// <summary>
+    /// A brainfuck interpreter.
+    /// </summary>
     public class Interpreter
     {
         #region Properties
-        private string _code;
-        public string Code { get => _code; private set => _code = value; } // use SetCode() method to set code
+        /// <summary>
+        /// A brainfuck code that will be executed.
+        /// Use SetCode() to set it.
+        /// </summary>
+        public string Code { get; private set; }
 
+        /// <summary>
+        /// An amount of 8-bit memory cells that will be created by interpreter.
+        /// By default, it's 30000.
+        /// </summary>
         public int CellsCount { get; set; } = 30000;
+        /// <summary>
+        /// Logger that will be used, if program crashes.
+        /// By default, it's BaseLogger.
+        /// </summary>
         public ILogger Logger { get; set; } = new BaseLogger();
         #endregion
         
         #region Constructors
+        /// <summary>
+        /// Creates a new instance of Interpreter.
+        /// </summary>
         public Interpreter() { }
+        /// <summary>
+        /// Creates a new instance of Interpreter and sets the specified code.
+        /// </summary>
+        /// <param name="code">Code that will be set.</param>
+        /// <param name="ignoreChecks">If true, no code checks will be made.</param>
         public Interpreter(string code, bool ignoreChecks)
         {
             SetCode(code, ignoreChecks);
@@ -23,6 +45,11 @@ namespace SharpBrainfuck
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Sets code.
+        /// </summary>
+        /// <param name="newCode">Code that will be set.</param>
+        /// <param name="ignoreChecks">If true, no code checks will be made.</param>
         public void SetCode(string newCode, bool ignoreChecks = false)
         {
             if (ignoreChecks)
@@ -58,10 +85,16 @@ namespace SharpBrainfuck
 
             Code = newCode;
         }
-
+        
+        /// <summary>
+        /// Executes the brainfuck code.
+        /// </summary>
+        /// <param name="outputToConsole">If true, program output will be printed to console.</param>
+        /// <param name="loggerOutput">A LoggerInfo, that contains information about program execution completion.</param>
+        /// <returns>A string that contains program output.</returns>
         public string Run(bool outputToConsole, out LoggerInfo loggerOutput)
         {
-            if (_code == null)
+            if (Code == null)
                 throw new BrainfuckException("No code set!");
 
             byte[] memory = new byte[CellsCount];
@@ -75,11 +108,11 @@ namespace SharpBrainfuck
             int i = 0;
             try
             {
-                for (; i < _code.Length; i++)
+                for (; i < Code.Length; i++)
                 {
                     if (loopCount == 0)
                     {
-                        switch (_code[i])
+                        switch (Code[i])
                         {
                             case '+':
                                 memory[pointer]++;
@@ -125,7 +158,7 @@ namespace SharpBrainfuck
                     }
                     else
                     {
-                        switch (_code[i])
+                        switch (Code[i])
                         {
                             case '[':
                                 loopCount++;
@@ -150,6 +183,11 @@ namespace SharpBrainfuck
             }
         }
 
+        /// <summary>
+        /// Executes the brainfuck code.
+        /// </summary>
+        /// <param name="outputToConsole">If true, program output will be printed to console.</param>
+        /// <returns>A string that contains program output.</returns>
         public string Run(bool outputToConsole)
         {
             return Run(outputToConsole, out LoggerInfo _);

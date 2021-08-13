@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SharpBrainfuck</name>
+    </assembly>
+    <members>
+        <member name="T:SharpBrainfuck.BaseLogger">
+            <summary>
+            A default brainfuck logger.
+            </summary>
+        </member>
+        <member name="P:SharpBrainfuck.BaseLogger.LogFile">
+            <summary>
+            The file log will be written to.
+            </summary>
+        </member>
+        <member name="M:SharpBrainfuck.BaseLogger.Log(SharpBrainfuck.LoggerInfo)">
+            <summary>
+            Creates a log in LogFile.
+            Note that LogFile will be cleared.
+            </summary>
+            <param name="loggerInfo">The LoggerInfo that contains information about the program ending.</param>
+        </member>
+        <member name="M:SharpBrainfuck.BaseLogger.#ctor(System.String)">
+            <summary>
+            Creates a new instance of BaseLogger.
+            </summary>
+            <param name="logFile">The file log will be written to.</param>
+        </member>
+        <member name="M:SharpBrainfuck.BaseLogger.#ctor">
+            <summary>
+            Creates a new instance of BaseLogger, and sets LogFile to "log.txt".
+            </summary>
+        </member>
+        <member name="T:SharpBrainfuck.ILogger">
+            <summary>
+            Interface for brainfuck loggers.
+            </summary>
+        </member>
+        <member name="M:SharpBrainfuck.ILogger.Log(SharpBrainfuck.LoggerInfo)">
+            <summary>
+            This method will be called if brainfuck program crashes.
+            </summary>
+        </member>
+        <member name="T:SharpBrainfuck.Interpreter">
+            <summary>
+            A brainfuck interpreter.
+            </summary>
+        </member>
+        <member name="P:SharpBrainfuck.Interpreter.Code">
+            <summary>
+            A brainfuck code that will be executed.
+            Use SetCode() to set it.
+            </summary>
+        </member>
+        <member name="P:SharpBrainfuck.Interpreter.CellsCount">
+            <summary>
+            An amount of 8-bit memory cells that will be created by interpreter.
+            By default, it's 30000.
+            </summary>
+        </member>
+        <member name="P:SharpBrainfuck.Interpreter.Logger">
+            <summary>
+            Logger that will be used, if program crashes.
+            By default, it's BaseLogger.
+            </summary>
+        </member>
+        <member name="M:SharpBrainfuck.Interpreter.#ctor">
+            <summary>
+            Creates a new instance of Interpreter.
+            </summary>
+        </member>
+        <member name="M:SharpBrainfuck.Interpreter.#ctor(System.String,System.Boolean)">
+            <summary>
+            Creates a new instance of Interpreter and sets the specified code.
+            </summary>
+            <param name="code">Code that will be set.</param>
+            <param name="ignoreChecks">If true, no code checks will be made.</param>
+        </member>
+        <member name="M:SharpBrainfuck.Interpreter.SetCode(System.String,System.Boolean)">
+            <summary>
+            Sets code.
+            </summary>
+            <param name="newCode">Code that will be set.</param>
+            <param name="ignoreChecks">If true, no code checks will be made.</param>
+        </member>
+        <member name="M:SharpBrainfuck.Interpreter.Run(System.Boolean,SharpBrainfuck.LoggerInfo@)">
+            <summary>
+            Executes the brainfuck code.
+            </summary>
+            <param name="outputToConsole">If true, program output will be printed to console.</param>
+            <param name="loggerOutput">A LoggerInfo, that contains information about program execution completion.</param>
+            <returns>A string that contains program output.</returns>
+        </member>
+        <member name="M:SharpBrainfuck.Interpreter.Run(System.Boolean)">
+            <summary>
+            Executes the brainfuck code.
+            </summary>
+            <param name="outputToConsole">If true, program output will be printed to console.</param>
+            <returns>A string that contains program output.</returns>
+        </member>
+        <member name="T:SharpBrainfuck.LoggerInfo">
+            <summary>
+            A container of interpreter information at the moment the program ends.
+            Once it's created, it cannot be changed.
+            </summary>
+        </member>
+        <member name="M:SharpBrainfuck.LoggerInfo.#ctor(System.Int32,System.Byte[],System.Boolean)">
+            <summary>
+            Creates a new instance of LoggerInfo.
+            </summary>
+        </member>
+    </members>
+</doc>

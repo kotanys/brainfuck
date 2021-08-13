@@ -23,7 +23,7 @@ namespace SharpBrainfuck
 
             try
             {
-                using (StreamReader sr = new StreamReader(path))
+                using (StreamReader sr = new(path))
                 {
                     code = sr.ReadToEnd();
                 }
@@ -48,8 +48,8 @@ namespace SharpBrainfuck
             bool workingOnArguments = false;
             ignoreChecks = false;
             
-            StringBuilder sb = new StringBuilder();
-            StringBuilder logSb = new StringBuilder();
+            StringBuilder sb = new();
+            StringBuilder logSb = new();
             foreach (string word in args)
             {
                 if (makingLogPath) 
@@ -74,7 +74,7 @@ namespace SharpBrainfuck
                 }
             }
 
-            if (makingLogPath) interpreter.Logger.LogFile = (logSb.Length > 0) ? logSb.ToString() : interpreter.Logger.LogFile;
+            if (makingLogPath) ((BaseLogger)interpreter.Logger).LogFile = (logSb.Length > 0) ? logSb.ToString() : ((BaseLogger)interpreter.Logger).LogFile;
             return sb.ToString();
         }
     }
