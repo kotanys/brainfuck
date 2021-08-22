@@ -15,10 +15,13 @@ Usage:
         <ul>
           <li>-i - ignore code check</li>
           <li>-l [path] - Create a log if program crashes. Unless "path" is specified, log.txt will be used as a log file.</li>
+          <li>-nc - do not use crash points (`)</li>
         </ul> 
         <li>Note that path must be written as-is, without any additional symbols (like ")</li>
     </ul>
 </ol>
+
+Now it supports crash points. If interpreter reaches character \`, program will crash and log will be made.
 
 By the way, you can compile it as .dll and use it in your programs. Just set "OutputType" in SharpBrainfuck.csproj to "library".
   
