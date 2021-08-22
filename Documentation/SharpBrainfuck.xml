@@ -50,7 +50,7 @@
         <member name="P:SharpBrainfuck.Interpreter.Code">
             <summary>
             A brainfuck code that will be executed.
-            Use SetCode() to set it.
+            Use SetCode() with ignoreChecks parameter set to true to set it without checks.
             </summary>
         </member>
         <member name="P:SharpBrainfuck.Interpreter.CellsCount">
@@ -63,6 +63,21 @@
             <summary>
             Logger that will be used, if program crashes.
             By default, it's BaseLogger.
+            </summary>
+        </member>
+        <member name="P:SharpBrainfuck.Interpreter.UseCrashPoint">
+            <summary> 
+            If true, program will crash if interpreter
+            reaches a CrashPointChar in code.
+            By default, it's false.
+            </summary>
+        </member>
+        <member name="P:SharpBrainfuck.Interpreter.CrashPointChar">
+            <summary> 
+            Character that will be used as a crash point.
+            If UseCrashPoint is false, it will be ignored.
+            Trying to set to one of the brainfuck operators will throw ArgumentException.
+            By default, it's '`'.
             </summary>
         </member>
         <member name="M:SharpBrainfuck.Interpreter.#ctor">

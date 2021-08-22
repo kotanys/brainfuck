@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SharpBrainfuck
@@ -9,18 +10,49 @@ namespace SharpBrainfuck
     /// </summary>
     public class Interpreter
     {
+        #region Fields
+        private string _code;
+        private char _crashPointChar = '`';
+        #endregion
+
         #region Properties
         /// <summary>
         /// A brainfuck code that will be executed.
-        /// Use SetCode() to set it.
+        /// Use SetCode() with ignoreChecks parameter set to true to set it without checks.
         /// </summary>
-        public string Code { get; private set; }
+        public string Code { get => _code; set => SetCode(value); }
 
         /// <summary>
         /// An amount of 8-bit memory cells that will be created by interpreter.
         /// By default, it's 30000.
         /// </summary>
         public int CellsCount { get; set; } = 30000;
+
+        /// <summary> 
+        /// Character that will be used as a crash point.
+        /// If UseCrashPoint is false, it will be ignored.
+        /// Trying to set to one of the brainfuck operators will throw ArgumentException.
+        /// By default, it's '`'.
+        /// </summary>
+        public char CrashPointChar
+        {
+            get => _crashPointChar;
+            set
+            {
+                char[] bfOps = new[] { '+', '-', '<', '>', '.', ',', '[', ']' };
+                if (bfOps.Contains(value))
+                    throw new ArgumentException("Character that you are trying to set as a crash point is a brainfuck operator.");
+
+                _crashPointChar = value;
+            }
+        }
+        /// <summary> 
+        /// If true, program will crash if interpreter
+        /// reaches a CrashPointChar in code.
+        /// By default, it's false.
+        /// </summary>
+        public bool UseCrashPoint { get; set; } = false;
+
         /// <summary>
         /// Logger that will be used, if program crashes.
         /// By default, it's BaseLogger.
@@ -44,7 +76,7 @@ namespace SharpBrainfuck
         }
         #endregion
 
-        #region Methods
+        #region Public Methods
         /// <summary>
         /// Sets code.
         /// </summary>
@@ -54,38 +86,27 @@ namespace SharpBrainfuck
         {
             if (ignoreChecks)
             {
-                Code = newCode;
+                _code = newCode;
                 return;
             }
-            
+
             if (newCode == null)
             {
                 throw new ArgumentNullException(nameof(newCode));
             }
 
-            uint openLoopSign = 0;
-            uint closeLoopSign = 0;
-            foreach (char instruction in newCode)
+            try
             {
-                switch (instruction)
-                {
-                    case '[':
-                        openLoopSign++;
-                        break;
-                    case ']':
-                        closeLoopSign++;
-                        break;
-                    default:
-                        break;
-                }
+                LoopCheck(newCode);
+            }
+            catch (BrainfuckException bfEx)
+            {
+                throw new ArgumentException("Code check was failed: " + bfEx.Message);
             }
 
-            if (openLoopSign != closeLoopSign)
-                throw new BrainfuckException(String.Format("Code is incorrect -- there are {0} \'[\' and {1} \']\'", openLoopSign, closeLoopSign));
-
-            Code = newCode;
+            _code = newCode;
         }
-        
+
         /// <summary>
         /// Executes the brainfuck code.
         /// </summary>
@@ -153,6 +174,8 @@ namespace SharpBrainfuck
                                 loops.RemoveAt(loops.Count - 1);
                                 break;
                             default:
+                                if (UseCrashPoint && Code[i] == _crashPointChar)
+                                    throw new BrainfuckException("Crash point reached!");
                                 break;
                         }
                     }
@@ -171,15 +194,15 @@ namespace SharpBrainfuck
                         }
                     }
                 }
-                
+
                 loggerOutput = new(i, memory, false);
                 return output.ToString();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 loggerOutput = new(i, memory, true);
                 Logger.Log(loggerOutput);
-                throw new BrainfuckException("Something went wrong!");
+                throw new BrainfuckException("Something went wrong!", e);
             }
         }
 
@@ -192,6 +215,30 @@ namespace SharpBrainfuck
         {
             return Run(outputToConsole, out LoggerInfo _);
         }
+        #endregion
+
+        #region Private Methods
+        private static void LoopCheck(string code)
+        {
+            uint openLoopSigns = 0;
+            uint closeLoopSigns = 0;
+
+            foreach (char instruction in code) switch (instruction)
+                {
+                    case '[':
+                        openLoopSigns++;
+                        break;
+                    case ']':
+                        closeLoopSigns++;
+                        break;
+                    default:
+                        break;
+                }
+
+            if (openLoopSigns != closeLoopSigns)
+                throw new BrainfuckException(String.Format("Code is incorrect -- there are {0} \'[\' and {1} \']\'", openLoopSigns, closeLoopSigns));
+        }
+            
         #endregion
     }
 }
