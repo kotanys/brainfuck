@@ -1,29 +1,34 @@
+using System;
+
 namespace SharpBrainfuck
 {
     /// <summary>
-    /// A container of interpreter information at the moment the program ends.
-    /// Once it's created, it cannot be changed.
+    /// A container of interpreter information at the moment the program ends. Immutable.
     /// </summary>
+    [Serializable]
     public struct LoggerInfo
     {
-        private readonly int _instructionIndex;
-        private readonly byte[] _memoryDump;
-        private readonly bool _crashed;
-
-#pragma warning disable CS1591
-        public int InstructionIndex { get => _instructionIndex; }
-        public byte[] MemoryDump { get => _memoryDump; }
-        public bool Crashed { get => _crashed; }
-#pragma warning restore CS1591
+        /// <summary>
+        /// Represents position of the instruction in the code at the moment of execution completion.
+        /// </summary>
+        public int InstructionIndex { get; }
+        /// <summary>
+        /// An array containing program memory at the moment of execution completion.
+        /// </summary>
+        public byte[] MemoryDump { get; }
+        /// <summary>
+        /// Respresents whether the program crashed (<c>true</c>) or not (<c>false</c>).
+        /// </summary>
+        public bool Crashed { get; }
 
         /// <summary>
-        /// Creates a new instance of LoggerInfo.
+        /// Creates a new instance of <see cref="LoggerInfo"/>.
         /// </summary>
         public LoggerInfo(int instructionIndex, byte[] memory, bool crashed)
         {
-            _instructionIndex = instructionIndex;
-            _memoryDump = memory;
-            _crashed = crashed;
+            InstructionIndex = instructionIndex;
+            MemoryDump = memory;
+            Crashed = crashed;
         }
     }
 }

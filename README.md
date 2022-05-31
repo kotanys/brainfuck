@@ -8,7 +8,7 @@ Usage:
 <ol>
     <li>Download and install git</li>
     <li>Run "git clone https://github.com/kotanys/brainfuck/"</li>
-    <li>Compile code with any C# compiler (e.g. OmniSharp)</li>
+    <li>Compile code with any C# compiler</li>
     <li>Run "SharpBrainfuck.exe {path to file with brainfuck code} [-i] [-l [path]]"</li>
     <ul>
         <li>Arguments</li>

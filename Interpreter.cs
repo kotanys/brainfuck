@@ -17,23 +17,24 @@ namespace SharpBrainfuck
 
         #region Properties
         /// <summary>
-        /// A brainfuck code that will be executed.
-        /// Use SetCode() with ignoreChecks parameter set to true to set it without checks.
+        /// <para>A brainfuck code that will be executed.</para>
+        /// <para>Use SetCode() with ignoreChecks parameter set to true to set it without checks.</para>
         /// </summary>
         public string Code { get => _code; set => SetCode(value); }
 
         /// <summary>
-        /// An amount of 8-bit memory cells that will be created by interpreter.
-        /// By default, it's 30000.
+        /// <para>An amount of 8-bit memory cells that will be created by interpreter.</para>
+        /// <para>By default, it's 30000.</para>
         /// </summary>
         public int CellsCount { get; set; } = 30000;
 
         /// <summary> 
-        /// Character that will be used as a crash point.
-        /// If UseCrashPoint is false, it will be ignored.
-        /// Trying to set to one of the brainfuck operators will throw ArgumentException.
-        /// By default, it's '`'.
+        /// <para>Character that will be used as a crash point.</para>
+        /// <para>If UseCrashPoint is false, it will be ignored.</para>
+        /// <para>Trying to set to one of the brainfuck operators will throw <see cref="ArgumentException"/>.</para>
+        /// <para>By default, it's '`'.</para>
         /// </summary>
+        /// <exception cref="ArgumentException"></exception>
         public char CrashPointChar
         {
             get => _crashPointChar;
@@ -47,26 +48,25 @@ namespace SharpBrainfuck
             }
         }
         /// <summary> 
-        /// If true, program will crash if interpreter
-        /// reaches a CrashPointChar in code.
-        /// By default, it's false.
+        /// <para>If true, program will crash if interpreter reaches a CrashPointChar in code.</para>
+        /// <para>By default, it's false.</para>
         /// </summary>
         public bool UseCrashPoint { get; set; } = false;
 
         /// <summary>
-        /// Logger that will be used, if program crashes.
-        /// By default, it's BaseLogger.
+        /// <para>Logger that will be used, if program crashes.</para>
+        /// <para>By default, it's BaseLogger.</para>
         /// </summary>
         public ILogger Logger { get; set; } = new BaseLogger();
         #endregion
         
         #region Constructors
         /// <summary>
-        /// Creates a new instance of Interpreter.
+        /// Creates a new instance of <see cref="Interpreter"/>.
         /// </summary>
         public Interpreter() { }
         /// <summary>
-        /// Creates a new instance of Interpreter and sets the specified code.
+        /// Creates a new instance of <see cref="Interpreter"/> and sets the specified code.
         /// </summary>
         /// <param name="code">Code that will be set.</param>
         /// <param name="ignoreChecks">If true, no code checks will be made.</param>
@@ -82,6 +82,8 @@ namespace SharpBrainfuck
         /// </summary>
         /// <param name="newCode">Code that will be set.</param>
         /// <param name="ignoreChecks">If true, no code checks will be made.</param>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public void SetCode(string newCode, bool ignoreChecks = false)
         {
             if (ignoreChecks)
@@ -113,6 +115,7 @@ namespace SharpBrainfuck
         /// <param name="outputToConsole">If true, program output will be printed to console.</param>
         /// <param name="loggerOutput">A LoggerInfo, that contains information about program execution completion.</param>
         /// <returns>A string that contains program output.</returns>
+        /// <exception cref="BrainfuckException"></exception>
         public string Run(bool outputToConsole, out LoggerInfo loggerOutput)
         {
             if (Code == null)
@@ -120,11 +123,11 @@ namespace SharpBrainfuck
 
             byte[] memory = new byte[CellsCount];
             int pointer = 0;
-            List<int> loops = new List<int>();
+            var loops = new Stack<int>();
 
             uint loopCount = 0; // used, when skipping [] loop
 
-            StringBuilder output = new StringBuilder();
+            var output = new StringBuilder();
 
             int i = 0;
             try
@@ -142,16 +145,12 @@ namespace SharpBrainfuck
                                 memory[pointer]--;
                                 break;
                             case '<':
-                                if (pointer == 0)
+                                if (--pointer == -1)
                                     pointer = memory.Length - 1;
-                                else
-                                    pointer--;
                                 break;
                             case '>':
-                                if (pointer == memory.Length - 1)
+                                if (++pointer == memory.Length)
                                     pointer = 0;
-                                else
-                                    pointer++;
                                 break;
                             case '.':
                                 char outChar = char.ConvertFromUtf32(memory[pointer])[0];
@@ -164,14 +163,14 @@ namespace SharpBrainfuck
                                 break;
                             case '[':
                                 if (memory[pointer] != 0)
-                                    loops.Add(i - 1);
+                                    loops.Push(i - 1);
                                 else
                                     loopCount++;
                                 break;
                             case ']':
+                                int removed = loops.Pop();
                                 if (memory[pointer] != 0)
-                                    i = loops[^1];
-                                loops.RemoveAt(loops.Count - 1);
+                                    i = removed;
                                 break;
                             default:
                                 if (UseCrashPoint && Code[i] == _crashPointChar)
@@ -211,6 +210,7 @@ namespace SharpBrainfuck
         /// </summary>
         /// <param name="outputToConsole">If true, program output will be printed to console.</param>
         /// <returns>A string that contains program output.</returns>
+        /// <exception cref="BrainfuckException"></exception>
         public string Run(bool outputToConsole)
         {
             return Run(outputToConsole, out LoggerInfo _);
@@ -236,7 +236,7 @@ namespace SharpBrainfuck
                 }
 
             if (openLoopSigns != closeLoopSigns)
-                throw new BrainfuckException(String.Format("Code is incorrect -- there are {0} \'[\' and {1} \']\'", openLoopSigns, closeLoopSigns));
+                throw new BrainfuckException(string.Format("Code is incorrect -- there are {0} \'[\' and {1} \']\'", openLoopSigns, closeLoopSigns));
         }
             
         #endregion
